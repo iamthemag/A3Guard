@@ -1,0 +1,12 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>icons/examguard.png</file>
+    <file>icons/start.png</file>
+    <file>icons/stop.png</file>
+    <file>icons/alert.png</file>
+    <file>icons/network.png</file>
+    <file>icons/security.png</file>
+    <file>icons/screenshot.png</file>
+    <file>icons/log.png</file>
+</qresource>
+</RCC>

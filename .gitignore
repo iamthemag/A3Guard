@@ -1,0 +1,113 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Qt generated files
+*.pro.user*
+*.qrc.cpp
+*_automoc.cpp
+moc_*.cpp
+moc_*.h
+qrc_*.cpp
+ui_*.h
+*.moc
+
+# Compiled binaries
+ExamGuard
+*.exe
+*.out
+*.app
+*.so
+*.dylib
+*.dll
+
+# Package files
+*.deb
+*.rpm
+*.dmg
+*.AppImage
+*.tar.gz
+*.zip
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+*.eglog
+*.egimg
+*.egbak
+*.egint
+
+# Temporary files
+*.tmp
+*.temp
+/tmp/
+
+# System specific
+.directory
+desktop.ini
+
+# Coverage files
+*.gcov
+*.gcda
+*.gcno
+coverage.xml
+coverage.info
+lcov.info
+
+# Profiling files
+gmon.out
+callgrind.out.*
+massif.out.*
+
+# Static analysis
+cppcheck-results.xml
+clang-tidy-results.txt
+
+# Documentation generated files
+docs/generated/
+docs/api/
+html/
+latex/
+
+# Development and testing
+test-results/
+screenshots/
+logs/
+backup/
+integrity/
+
+# Security files (should not be in repo)
+*.key
+*.pem
+*.crt
+*.p12
+
+# Local configuration overrides
+local.conf
+*.local
+
+# Clion
+cmake-build-debug/
+cmake-build-release/
+
+# Visual Studio Code
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
