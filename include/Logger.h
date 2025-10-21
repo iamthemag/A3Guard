@@ -34,11 +34,11 @@ public:
 
     // Log retrieval
     QStringList getRecentLogs(int count = 100) const;
+    QStringList getLogsFromLastHours(int hours) const;
     QStringList getAllLogs() const;
     bool exportLogs(const QString& outputPath) const;
 
     // Log management
-    void clearLogs();
     void rotateLogs();
     qint64 getLogSize() const;
     int getLogCount() const;
@@ -75,6 +75,7 @@ private:
     int m_maxLogEntries;
     
     static const int DEFAULT_MAX_LOG_ENTRIES;
+    static const QString DEFAULT_HIDDEN_LOG_DIR;
 };
 
 #endif // LOGGER_H

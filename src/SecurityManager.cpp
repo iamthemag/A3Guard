@@ -644,7 +644,7 @@ bool SecurityManager::loadIntegrityData(const QString& filePath, QString& hash, 
         
         QJsonObject data = doc.object();
         hash = data["hash"].toString();
-        size = data["size"].toInteger();
+        size = data["size"].toVariant().toLongLong();
         
         return !hash.isEmpty();
         
@@ -652,4 +652,46 @@ bool SecurityManager::loadIntegrityData(const QString& filePath, QString& hash, 
         LOG_ERROR("Failed to load integrity data:" << e.what());
         return false;
     }
+}
+
+bool SecurityManager::regenerateKey()
+{
+    LOG_INFO("Regenerating encryption key");
+    
+    // Generate new key
+    if (!generateKey()) {
+        LOG_ERROR("Failed to generate new encryption key");
+        return false;
+    }
+    
+    // Save new key
+    if (!saveKey()) {
+        LOG_ERROR("Failed to save new encryption key");
+        return false;
+    }
+    
+    LOG_INFO("Encryption key regenerated successfully");
+    return true;
+}
+
+bool SecurityManager::backupKey(const QString& backupPath)
+{
+    // Basic implementation - copy key file to backup location
+    QFile keyFile(m_keyFilePath);
+    if (!keyFile.exists()) {
+        LOG_ERROR("Key file does not exist");
+        return false;
+    }
+    
+    if (!keyFile.copy(backupPath)) {
+        LOG_ERROR("Failed to backup key file to:" << backupPath);
+        return false;
+    }
+    
+    // Set secure permissions on backup
+    QFile backupFile(backupPath);
+    backupFile.setPermissions(QFileDevice::ReadOwner | QFileDevice::WriteOwner);
+    
+    LOG_INFO("Key backed up to:" << backupPath);
+    return true;
 }

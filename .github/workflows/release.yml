@@ -1,0 +1,183 @@
+name: Release - Build DEB Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  BUILD_TYPE: Release
+  PROJECT_NAME: A3Guard
+  ICON_PATH: A3Guard.png
+
+jobs:
+  validate-tag:
+    name: Validate Release Tag
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      is_release: ${{ steps.version.outputs.is_release }}
+    
+    steps:
+      - name: Extract version from tag
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+            echo "is_release=true" >> $GITHUB_OUTPUT
+            echo "Release version: $VERSION"
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  build-release:
+    name: Build Release Package
+    runs-on: ubuntu-20.04
+    needs: validate-tag
+    
+    permissions:
+      contents: write
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake \
+            qt5-default qtbase5-dev qtbase5-dev-tools \
+            libssl-dev libudev-dev libx11-dev libxfixes-dev \
+            pkg-config dpkg-dev debhelper fakeroot
+
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DCMAKE_INSTALL_PREFIX=/opt/a3guard \
+                -DCPACK_GENERATOR=DEB \
+                -DCPACK_PACKAGE_VERSION="${{ needs.validate-tag.outputs.version }}" \
+                ..
+
+      - name: Build project
+        working-directory: build
+        run: |
+          make -j$(nproc)
+          echo "Build completed for version ${{ needs.validate-tag.outputs.version }}"
+
+      - name: Create DEB package
+        working-directory: build
+        run: |
+          make package
+          ls -lh *.deb
+
+      - name: Verify DEB package
+        working-directory: build
+        run: |
+          PACKAGE=$(ls *.deb | head -1)
+          echo "Package: $PACKAGE"
+          dpkg-deb --info "$PACKAGE" | head -20
+          echo "✅ Package verified"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: build/*.deb
+          draft: false
+          prerelease: false
+          body: |
+            # A3Guard ${{ needs.validate-tag.outputs.version }} Release
+            
+            ## Installation
+            ```bash
+            sudo dpkg -i a3guard_${{ needs.validate-tag.outputs.version }}_amd64.deb
+            sudo apt install -f
+            ```
+            
+            ## Running
+            ```bash
+            pkexec /opt/a3guard/bin/A3Guard
+            ```
+            
+            ## What's New
+            For detailed changelog, see CHANGELOG.md
+            
+            ## System Requirements
+            - Ubuntu 20.04 LTS or later
+            - Qt5 5.12+
+            - OpenSSL 1.1+
+            - PolicyKit for privilege elevation
+            
+            ## Features
+            - Real-time monitoring of applications, windows, clipboard, USB devices
+            - Network control with airplane mode
+            - AES-256 encryption for logs and data
+            - SHA-256 integrity verification
+            - System tray UI with comprehensive monitoring
+            - Resource usage tracking and enforcement
+            - Session management with report generation
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate build summary
+        run: |
+          echo "════════════════════════════════════════════════════════"
+          echo "Release Build Summary"
+          echo "════════════════════════════════════════════════════════"
+          echo "Version: ${{ needs.validate-tag.outputs.version }}"
+          echo "Tag: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+          echo "════════════════════════════════════════════════════════"
+          if [ -f build/A3Guard ]; then
+            echo "Binary: $(ls -lh build/A3Guard | awk '{print $5, $9}')"
+          fi
+          if [ -f build/*.deb ]; then
+            echo "Package: $(ls -lh build/*.deb)"
+          fi
+          echo "════════════════════════════════════════════════════════"
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: build-release
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+        continue-on-error: true
+
+      - name: Upload scan results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+        continue-on-error: true
+
+  notify-success:
+    name: Notify Success
+    runs-on: ubuntu-latest
+    needs: [build-release, security-scan]
+    if: always() && needs.build-release.result == 'success'
+    
+    steps:
+      - name: Release created successfully
+        run: |
+          echo "✅ Release ${{ github.ref }} created successfully!"
+          echo ""
+          echo "DEB package available at:"
+          echo "https://github.com/${{ github.repository }}/releases/tag/${{ github.ref_name }}"

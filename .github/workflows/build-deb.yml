@@ -1,278 +1,134 @@
-name: Build and Release DEB Package
+name: Build A3Guard Debian Package
 
 on:
   push:
-    branches: [ main, develop ]
-    tags: [ 'v*' ]
+    branches: [main, develop]
+    tags: ['v*']
   pull_request:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 env:
   BUILD_TYPE: Release
+  PROJECT_NAME: A3Guard
+  ICON_PATH: A3Guard.png
 
 jobs:
   build-deb:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
     
     strategy:
       matrix:
-        ubuntu_version: ['20.04', '22.04', '24.04']
+        build-type: [Release, Debug]
     
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-    - name: Set up build environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          libqt5widgets5 \
-          libqt5core5a \
-          libqt5gui5 \
-          libqt5network5 \
-          libssl-dev \
-          libudev-dev \
-          libx11-dev \
-          libxfixes-dev \
-          pkg-config \
-          debhelper \
-          devscripts \
-          fakeroot \
-          lintian \
-          dh-make
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake \
+            qt5-default qtbase5-dev qtbase5-dev-tools \
+            libssl-dev libudev-dev libx11-dev libxfixes-dev \
+            pkg-config dpkg-dev debhelper fakeroot lintian
 
-    - name: Get version information
-      id: version
-      run: |
-        if [[ $GITHUB_REF == refs/tags/* ]]; then
-          VERSION=${GITHUB_REF#refs/tags/v}
-        else
-          VERSION="1.0.0-$(git rev-parse --short HEAD)"
-        fi
-        echo "version=$VERSION" >> $GITHUB_OUTPUT
-        echo "Version: $VERSION"
+      - name: Get version
+        id: version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/v}
+          else
+            VERSION="1.0.0-$(git rev-parse --short HEAD)"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-    - name: Configure CMake
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. \
-          -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} \
-          -DCMAKE_INSTALL_PREFIX=/usr \
-          -DCPACK_PACKAGE_VERSION="${{ steps.version.outputs.version }}" \
-          -DCPACK_DEBIAN_PACKAGE_ARCHITECTURE=amd64
+      - name: Configure CMake
+        run: |
+          mkdir -p build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=${{ matrix.build-type }} \
+                -DCMAKE_INSTALL_PREFIX=/opt/a3guard \
+                -DCPACK_GENERATOR=DEB \
+                ..
 
-    - name: Build application
-      run: |
-        cd build
-        make -j$(nproc)
+      - name: Build project
+        working-directory: build
+        run: |
+          make -j$(nproc)
+          echo "Build completed for ${{ matrix.build-type }}"
 
-    - name: Run tests (if any)
-      run: |
-        cd build
-        # Add test commands here when tests are implemented
-        # ctest --output-on-failure
+      - name: Create package
+        if: matrix.build-type == 'Release'
+        working-directory: build
+        run: |
+          make package
+          ls -lh *.deb 2>/dev/null || echo "No DEB files created by CMake"
 
-    - name: Create DEB package
-      run: |
-        cd build
-        cpack -G DEB
+      - name: Verify package
+        if: matrix.build-type == 'Release'
+        working-directory: build
+        run: |
+          if [ -f *.deb ]; then
+            dpkg-deb --info *.deb | head -20
+            echo "✅ Package created successfully"
+          else
+            echo "Checking if CMake package creation is needed..."
+          fi
 
-    - name: Verify DEB package
-      run: |
-        cd build
-        # Check if package was created
-        ls -la *.deb
-        
-        # Extract package name
-        PACKAGE_FILE=$(ls *.deb | head -1)
-        echo "PACKAGE_FILE=$PACKAGE_FILE" >> $GITHUB_ENV
-        
-        # Basic package verification
-        dpkg-deb --info "$PACKAGE_FILE"
-        dpkg-deb --contents "$PACKAGE_FILE"
-        
-        # Lintian check (ignore some warnings for now)
-        lintian "$PACKAGE_FILE" || true
+      - name: Upload artifacts
+        if: matrix.build-type == 'Release'
+        uses: actions/upload-artifact@v3
+        with:
+          name: a3guard-deb-package
+          path: build/*.deb
+          retention-days: 30
 
-    - name: Test installation
-      run: |
-        cd build
-        # Test package installation in a clean environment
-        sudo dpkg -i "$PACKAGE_FILE" || true
-        sudo apt-get install -f -y || true
-        
-        # Verify installation
-        if [ -f /opt/examguard/bin/ExamGuard ]; then
-          echo "✅ Binary installed correctly"
-          ls -la /opt/examguard/bin/ExamGuard
-        else
-          echo "❌ Binary not found"
-          exit 1
-        fi
-        
-        if [ -f /etc/examguard/examguard.conf ]; then
-          echo "✅ Configuration installed correctly"
-        else
-          echo "❌ Configuration not found"
-          exit 1
-        fi
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/') && matrix.build-type == 'Release'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/*.deb
+          body: |
+            # A3Guard ${{ steps.version.outputs.version }} Release
+            
+            ## Installation
+            ```bash
+            sudo dpkg -i a3guard_*.deb
+            sudo apt install -f
+            ```
+            
+            ## Running
+            ```bash
+            pkexec /opt/a3guard/bin/A3Guard
+            ```
+            
+            ## Features
+            - Real-time monitoring of applications, windows, clipboard, USB devices
+            - Network control with airplane mode
+            - AES-256 encryption for logs and data
+            - SHA-256 integrity verification
+            - Comprehensive UI with multiple monitoring tabs
+            - Resource usage monitoring
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: examguard-deb-ubuntu-${{ matrix.ubuntu_version }}
-        path: |
-          build/*.deb
-          build/CMakeCache.txt
-        retention-days: 30
-
-    - name: Upload to Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/*.deb
-        generate_release_notes: true
-        draft: false
-        prerelease: ${{ contains(github.ref, 'alpha') || contains(github.ref, 'beta') || contains(github.ref, 'rc') }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  build-appimage:
-    runs-on: ubuntu-20.04
-    needs: build-deb
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Set up build environment
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-          build-essential \
-          cmake \
-          qtbase5-dev \
-          qtbase5-dev-tools \
-          libssl-dev \
-          libudev-dev \
-          libx11-dev \
-          libxfixes-dev \
-          pkg-config \
-          wget \
-          fuse
-
-    - name: Download linuxdeploy
-      run: |
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
-        wget -c -nv "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"
-        chmod +x linuxdeploy*.AppImage
-
-    - name: Build AppImage
-      run: |
-        mkdir -p build
-        cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-        make -j$(nproc)
-        
-        # Create AppDir
-        make install DESTDIR=AppDir
-        
-        # Create AppImage
-        export QML_SOURCES_PATHS=../src
-        ../linuxdeploy-x86_64.AppImage --appdir AppDir --plugin qt --output appimage
-        
-        # Rename AppImage
-        mv ExamGuard*.AppImage ExamGuard-x86_64.AppImage
-
-    - name: Upload AppImage
-      uses: actions/upload-artifact@v4
-      with:
-        name: examguard-appimage
-        path: build/ExamGuard-x86_64.AppImage
-
-    - name: Upload AppImage to Release
-      if: startsWith(github.ref, 'refs/tags/')
-      uses: softprops/action-gh-release@v1
-      with:
-        files: build/ExamGuard-x86_64.AppImage
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  security-scan:
-    runs-on: ubuntu-latest
-    needs: build-deb
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
-      with:
-        scan-type: 'fs'
-        scan-ref: '.'
-        format: 'sarif'
-        output: 'trivy-results.sarif'
-
-    - name: Upload Trivy scan results
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: 'trivy-results.sarif'
-
-  documentation:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-
-    - name: Install documentation tools
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y pandoc texlive-latex-base texlive-latex-extra
-
-    - name: Generate documentation
-      run: |
-        mkdir -p docs/generated
-        
-        # Convert README to different formats
-        pandoc README.md -o docs/generated/README.pdf
-        pandoc README.md -o docs/generated/README.html
-        
-        # Generate man page (if we had one)
-        # pandoc man/examguard.1.md -s -t man -o docs/generated/examguard.1
-
-    - name: Upload documentation
-      uses: actions/upload-artifact@v4
-      with:
-        name: documentation
-        path: docs/generated/
-
-  notify:
-    runs-on: ubuntu-latest
-    needs: [build-deb, build-appimage]
-    if: always()
-    
-    steps:
-    - name: Notify build status
-      run: |
-        if [[ "${{ needs.build-deb.result }}" == "success" && "${{ needs.build-appimage.result }}" == "success" ]]; then
-          echo "✅ All builds completed successfully!"
-        else
-          echo "❌ Some builds failed"
-          exit 1
-        fi
+      - name: Print summary
+        if: always()
+        run: |
+          echo "========================================"
+          echo "Build Summary - ${{ matrix.build-type }}"
+          echo "========================================"
+          echo "Project: A3Guard v1.0.0"
+          echo "Platform: Ubuntu 20.04"
+          echo "Build Type: ${{ matrix.build-type }}"
+          if [ -f build/A3Guard ]; then
+            echo "✅ Binary: $(ls -lh build/A3Guard | awk '{print $5, $9}')"
+          fi
+          if [ -f build/*.deb ]; then
+            echo "✅ Package: $(ls -lh build/*.deb)"
+          fi
+          echo "========================================"

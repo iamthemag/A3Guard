@@ -61,6 +61,8 @@ public:
     QStringList getDisabledInterfaces() const;
     QStringList getAllowedInterfaces() const;
     bool getBlockAllTraffic() const;
+    bool getAllowLocalhost() const;
+    QStringList getWhitelistedLocalhostApps() const;
 
     // Security configuration
     bool getIntegrityCheckEnabled() const;
@@ -77,6 +79,11 @@ public:
 
     // Resource monitoring
     bool getResourceMonitoringEnabled() const;
+
+    // Whitelist configuration
+    QStringList getWhitelistedApplications() const;
+    QStringList getWhitelistedWindows() const;
+    QStringList getWhitelistedUrls() const;
 
     // Directory management
     bool createDirectories() const;

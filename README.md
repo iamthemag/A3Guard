@@ -1,4 +1,32 @@
-# A3Guard - Advanced Advanced Assessment Application
+<h1 align="center">
+  <br>
+  <a href="http://github.com/iamthemag/A3Guard">
+    <img src="https://raw.githubusercontent.com/iamthemag/A3Guard/main/A3Guard-logo.jpg" alt="A3Guard" width="250">
+  </a>
+  <br>
+</h1>
+
+<p align="center">
+  <img src="https://visitor-badge.laobi.icu/badge?page_id=iamthemag.A3Guard" alt="Visitors" />
+  <img src="https://img.shields.io/github/stars/iamthemag/A3Guard" alt="GitHub Stars" />
+  <img src="https://img.shields.io/github/forks/iamthemag/A3Guard" alt="GitHub Forks" />
+  <img src="https://img.shields.io/github/issues/iamthemag/A3Guard" alt="Issues" />
+  <img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="GNU GPLv3" />
+  <img src="https://img.shields.io/github/v/release/iamthemag/A3Guard" alt="Latest Release" />
+  <img src="https://img.shields.io/github/contributors/iamthemag/A3Guard" alt="Contributors" />
+</p>
+
+<p align="center">
+  <a href="#about-a3guard">About A3Guard</a> •
+  <a href="#key-features">Key Features</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#security-features">Security</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#license">License</a>
+</p>
+
+## About A3Guard
 
 A3Guard is a comprehensive C++/Qt5-based desktop application for advanced assessment and monitoring for academic environments. It provides robust security features, real-time monitoring, and minimal resource usage.
 

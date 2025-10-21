@@ -65,6 +65,14 @@ enum class AlertLevel {
     VIOLATION
 };
 
+// Alert types for UI notifications
+enum class AlertType {
+    Info,
+    Warning,
+    Critical,
+    Error
+};
+
 // Monitoring state
 enum class MonitoringState {
     STOPPED,
@@ -122,7 +130,7 @@ struct SessionSummary {
                       appChanges(0), clipboardChanges(0), integrityViolations(0) {}
 };
 
-// Utility macros
+// Utility macros for logging - will be captured by Logger if active
 #define LOG_DEBUG(msg) qDebug() << "[DEBUG]" << QDateTime::currentDateTime().toString(Qt::ISODate) << msg
 #define LOG_INFO(msg) qDebug() << "[INFO]" << QDateTime::currentDateTime().toString(Qt::ISODate) << msg
 #define LOG_WARNING(msg) qWarning() << "[WARNING]" << QDateTime::currentDateTime().toString(Qt::ISODate) << msg

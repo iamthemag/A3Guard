@@ -4,6 +4,8 @@
 #include <QMessageBox>
 #include <QStyleFactory>
 #include <QFont>
+#include <QIcon>
+#include <QPalette>
 #include <unistd.h>
 #include <memory>
 
@@ -12,36 +14,55 @@
 #include "SecurityManager.h"
 #include "Logger.h"
 #include "Common.h"
+#include "PrivilegeDialog.h"
+
+// Global logger removed for now
 
 void setupApplication(QApplication& app)
 {
-    app.setApplicationName(EXAMGUARD_NAME);
-    app.setApplicationVersion(EXAMGUARD_VERSION);
-    app.setOrganizationName("ExamGuard");
-    app.setApplicationDisplayName("ExamGuard - Exam Monitoring System");
+    app.setApplicationName(A3GUARD_NAME);
+    app.setApplicationVersion(A3GUARD_VERSION);
+    app.setOrganizationName("A3Guard");
+    app.setApplicationDisplayName("A3Guard - Advanced Assessment Application");
 
     // Set application icon
-    app.setWindowIcon(QIcon(":/icons/examguard.png"));
+    app.setWindowIcon(QIcon(":/icons/a3guard.png"));
     
-    // Use a clean, professional style
+    // Use modern Fusion style
     app.setStyle(QStyleFactory::create("Fusion"));
     
-    // Dark theme for professional appearance
-    QPalette darkPalette;
-    darkPalette.setColor(QPalette::Window, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::WindowText, Qt::white);
-    darkPalette.setColor(QPalette::Base, QColor(25, 25, 25));
-    darkPalette.setColor(QPalette::AlternateBase, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ToolTipBase, Qt::white);
-    darkPalette.setColor(QPalette::ToolTipText, Qt::white);
-    darkPalette.setColor(QPalette::Text, Qt::white);
-    darkPalette.setColor(QPalette::Button, QColor(53, 53, 53));
-    darkPalette.setColor(QPalette::ButtonText, Qt::white);
-    darkPalette.setColor(QPalette::BrightText, Qt::red);
-    darkPalette.setColor(QPalette::Link, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::Highlight, QColor(42, 130, 218));
-    darkPalette.setColor(QPalette::HighlightedText, Qt::black);
-    app.setPalette(darkPalette);
+    // Modern semi-dark theme
+    QPalette modernPalette;
+    // Background colors - semi-dark
+    modernPalette.setColor(QPalette::Window, QColor(45, 45, 48));          // Main window background
+    modernPalette.setColor(QPalette::Base, QColor(60, 63, 65));            // Input fields, lists
+    modernPalette.setColor(QPalette::AlternateBase, QColor(50, 50, 53));   // Alternating rows
+    
+    // Text colors
+    modernPalette.setColor(QPalette::WindowText, QColor(220, 220, 220));   // Main text
+    modernPalette.setColor(QPalette::Text, QColor(255, 255, 255));         // Input text
+    modernPalette.setColor(QPalette::BrightText, QColor(255, 100, 100));   // Bright accent text
+    
+    // Button colors
+    modernPalette.setColor(QPalette::Button, QColor(70, 73, 75));          // Button background
+    modernPalette.setColor(QPalette::ButtonText, QColor(220, 220, 220));   // Button text
+    
+    // Selection colors - modern blue accent
+    modernPalette.setColor(QPalette::Highlight, QColor(0, 120, 215));      // Selection background
+    modernPalette.setColor(QPalette::HighlightedText, Qt::white);          // Selected text
+    
+    // Links and tooltips
+    modernPalette.setColor(QPalette::Link, QColor(100, 149, 237));         // Cornflower blue
+    modernPalette.setColor(QPalette::LinkVisited, QColor(147, 112, 219));  // Medium slate blue
+    modernPalette.setColor(QPalette::ToolTipBase, QColor(70, 73, 75));     // Tooltip background
+    modernPalette.setColor(QPalette::ToolTipText, QColor(220, 220, 220));  // Tooltip text
+    
+    // Disabled state
+    modernPalette.setColor(QPalette::Disabled, QPalette::WindowText, QColor(120, 120, 120));
+    modernPalette.setColor(QPalette::Disabled, QPalette::Text, QColor(120, 120, 120));
+    modernPalette.setColor(QPalette::Disabled, QPalette::ButtonText, QColor(120, 120, 120));
+    
+    app.setPalette(modernPalette);
     
     // Set application font
     QFont font("Ubuntu", 9);
@@ -52,21 +73,31 @@ bool checkRootPrivileges()
 {
     if (getuid() != 0) {
         QMessageBox::critical(nullptr, "Permission Denied", 
-            "ExamGuard requires administrator privileges to function properly.\n\n"
+            "A3Guard requires administrator privileges to function properly.\n\n"
             "Please run as root using one of these methods:\n"
-            "• sudo examguard\n"
-            "• pkexec examguard\n"
+            "• sudo a3guard\n"
+            "• pkexec a3guard\n"
             "• Use the desktop launcher (requires authentication)");
         return false;
     }
     return true;
 }
 
+bool requestPrivilegesIfNeeded()
+{
+    if (PrivilegeDialog::hasRootPrivileges()) {
+        return true;
+    }
+    
+    // Show privilege dialog after GUI is initialized
+    return true; // Allow startup without privileges
+}
+
 void showHelp()
 {
-    qDebug() << "ExamGuard - Exam Monitoring System v" << EXAMGUARD_VERSION;
+    qDebug() << "A3Guard - Advanced Assessment Application v" << A3GUARD_VERSION;
     qDebug() << "";
-    qDebug() << "Usage: ExamGuard [options]";
+    qDebug() << "Usage: A3Guard [options]";
     qDebug() << "";
     qDebug() << "Options:";
     qDebug() << "  --daemon                Run as daemon (no GUI)";
@@ -78,9 +109,9 @@ void showHelp()
     qDebug() << "  --version               Show version information";
     qDebug() << "";
     qDebug() << "Examples:";
-    qDebug() << "  sudo examguard                    # Run GUI as root";
-    qDebug() << "  sudo examguard --daemon           # Run as background service";
-    qDebug() << "  sudo examguard --generate-key     # Generate new encryption key";
+    qDebug() << "  sudo a3guard                    # Run GUI as root";
+    qDebug() << "  sudo a3guard --daemon           # Run as background service";
+    qDebug() << "  sudo a3guard --generate-key     # Generate new encryption key";
     qDebug() << "";
     qDebug() << "For more information, see the README.md file or man page.";
 }
@@ -92,7 +123,7 @@ int main(int argc, char *argv[])
 
     // Parse command line arguments
     QCommandLineParser parser;
-    parser.setApplicationDescription("ExamGuard - Advanced Exam Monitoring System");
+    parser.setApplicationDescription("A3Guard - Advanced Assessment Application");
     parser.addHelpOption();
     parser.addVersionOption();
     
@@ -118,33 +149,55 @@ int main(int argc, char *argv[])
     
     parser.process(app);
 
-    // Check for root privileges
-    if (!checkRootPrivileges()) {
-        return 1;
+    // For command-line operations, still require root
+    if (parser.isSet(generateKeyOption) || parser.isSet(verifyIntegrityOption) || parser.isSet(daemonOption)) {
+        if (!checkRootPrivileges()) {
+            return 1;
+        }
     }
 
     try {
-        // Initialize configuration
+        // Initialize configuration with fallback paths for user-space execution
         QString configFile = parser.value(configOption);
         if (configFile.isEmpty()) {
             configFile = DEFAULT_CONFIG_PATH;
+            // Fallback to user config if system config doesn't exist or isn't readable
+            if (!QFile::exists(configFile) || !QFileInfo(configFile).isReadable()) {
+                QString userConfigDir = QDir::homePath() + "/.config/a3guard";
+                QDir().mkpath(userConfigDir);
+                configFile = userConfigDir + "/a3guard.conf";
+                
+                // Create basic user config if it doesn't exist
+                if (!QFile::exists(configFile)) {
+                    QFile defaultConfig(":/config/a3guard.conf"); // Try resource first
+                    if (!defaultConfig.exists()) {
+                        // Create minimal config
+                        QFile userConfig(configFile);
+                        if (userConfig.open(QIODevice::WriteOnly | QIODevice::Text)) {
+                            QTextStream out(&userConfig);
+                            out << "[monitoring]\n";
+                            out << "screenshot_interval=120000\n";
+                            out << "network_check_interval=30000\n";
+                            out << "[security]\n";
+                            out << "enable_encryption=true\n";
+                            userConfig.close();
+                        }
+                    }
+                }
+            }
         }
         
         auto config = std::make_shared<ConfigManager>(configFile);
         if (!config->initialize()) {
-            QMessageBox::critical(nullptr, "Configuration Error",
-                QString("Failed to load configuration from: %1\n\n"
-                       "Please check if the file exists and is readable.").arg(configFile));
-            return 1;
+            // Try to continue with minimal functionality
+            LOG_WARNING("Failed to load configuration from:" << configFile << "- continuing with defaults");
         }
 
-        // Initialize logger
+        // Initialize logger with fault tolerance
         auto logger = std::make_shared<Logger>(config);
         if (!logger->initialize()) {
-            QMessageBox::critical(nullptr, "Logger Error",
-                "Failed to initialize logging system.\n\n"
-                "Please check directory permissions and disk space.");
-            return 1;
+            LOG_WARNING("Failed to initialize full logging system - continuing with console logging only");
+            // Continue without file logging - use console only
         }
 
         // Enable verbose logging if requested
@@ -152,18 +205,13 @@ int main(int argc, char *argv[])
             logger->setVerbose(true);
         }
 
-        LOG_INFO("ExamGuard starting - Version" << EXAMGUARD_VERSION);
+        LOG_INFO("A3Guard starting - Version" << A3GUARD_VERSION);
 
         // Initialize security manager
         auto security = std::make_shared<SecurityManager>(config, logger);
         if (!security->initialize()) {
-            QMessageBox::critical(nullptr, "Security Error",
-                "Failed to initialize security system.\n\n"
-                "This may indicate:\n"
-                "• Missing encryption key file\n"
-                "• Insufficient permissions\n"
-                "• Corrupted security data");
-            return 1;
+            LOG_WARNING("Failed to initialize full security system - continuing with limited functionality");
+            // Continue without full security features
         }
 
         // Handle command line options
@@ -210,21 +258,29 @@ int main(int argc, char *argv[])
         if (parser.isSet(daemonOption)) {
             LOG_INFO("Running in daemon mode (no GUI)");
             qDebug() << "Daemon mode is not yet implemented.";
-            qDebug() << "Use systemd service instead: sudo systemctl start examguard";
+            qDebug() << "Use systemd service instead: sudo systemctl start a3guard";
             return 1;
         }
 
         // Create and show main window
         LOG_INFO("Starting GUI mode");
         MainWindow window(config, security, logger);
-        window.show();
+        
+        // Only show the window if privilege check passed
+        if (window.shouldShowWindow()) {
+            window.show();
+        } else {
+            // Privilege check failed, application will exit
+            LOG_INFO("Application exiting due to failed privilege check");
+            return 1;
+        }
 
         // Handle application quit signal
         QObject::connect(&app, &QApplication::aboutToQuit, [&]() {
-            LOG_INFO("ExamGuard shutting down");
+            LOG_INFO("A3Guard shutting down");
         });
 
-        LOG_INFO("ExamGuard GUI ready");
+        LOG_INFO("A3Guard GUI ready");
         return app.exec();
 
     } catch (const std::exception& e) {
