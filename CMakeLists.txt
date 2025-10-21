@@ -47,6 +47,8 @@ set(SOURCES
     src/AlertManager.cpp
     src/ResourceMonitor.cpp
     src/SessionManager.cpp
+    src/PrivilegeDialog.cpp
+    src/UpdateChecker.cpp
 )
 
 # Header files
@@ -61,7 +63,9 @@ set(HEADERS
     include/AlertManager.h
     include/ResourceMonitor.h
     include/SessionManager.h
+    include/PrivilegeDialog.h
     include/Common.h
+    include/UpdateChecker.h
 )
 
 # Qt MOC files
@@ -121,6 +125,29 @@ install(PROGRAMS scripts/install.sh scripts/uninstall.sh
     DESTINATION /opt/a3guard/scripts
 )
 
+# Install launcher script
+install(PROGRAMS a3guard-launcher
+    DESTINATION /opt/a3guard/bin
+    RENAME a3guard
+)
+
+# Install desktop entry
+install(FILES A3Guard.desktop
+    DESTINATION /usr/share/applications
+)
+
+# Install application icon
+install(FILES A3Guard.png
+    DESTINATION /usr/share/pixmaps
+    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
+
+# Install PolicyKit policy
+install(FILES a3guard.policy
+    DESTINATION /usr/share/polkit-1/actions
+    RENAME com.a3guard.policy
+)
+
 # Create data directories during install
 install(CODE "
     execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory /var/log/a3guard)
@@ -135,9 +162,11 @@ set(CPACK_PACKAGE_NAME "a3guard")
 set(CPACK_PACKAGE_VERSION ${PROJECT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${PROJECT_DESCRIPTION})
 set(CPACK_PACKAGE_CONTACT "admin@example.com")
+set(CPACK_PACKAGE_ICON "${CMAKE_CURRENT_SOURCE_DIR}/A3Guard.png")
 set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "qt5-default, libssl-dev, libudev-dev, libx11-dev, libxfixes-dev")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SECTION "education")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/iamthemag/A3Guard")
 
 include(CPack)
