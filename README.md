@@ -36,7 +36,6 @@ A3Guard is a comprehensive C++/Qt5-based desktop application for advanced assess
 - **Application Tracking**: Monitor launched/closed applications
 - **Window Focus Tracking**: Track active window changes  
 - **Clipboard Monitoring**: Detect copy/paste activities
-- **Screenshot Capture**: Periodic encrypted screenshots
 - **USB Monitoring**: Detect device insertions/removals
 - **Network Control**: Granular network interface management
 
@@ -208,7 +207,6 @@ Configuration file: `/etc/a3guard/a3guard.conf`
 ### Key Settings
 ```ini
 [monitoring]
-screenshot_interval=120        # Screenshot every 2 minutes
 network_check_interval=30      # Check network every 30 seconds
 app_monitor_interval=5         # Check apps every 5 seconds
 
@@ -264,8 +262,6 @@ block_all_traffic=true
 └── *.a3log              # Encrypted log files
 
 /var/lib/a3guard/      # Data directory
-├── screenshots/
-│   └── *.a3img          # Encrypted screenshots
 ├── backup/
 │   └── *.a3bak          # Backup files
 └── integrity/
@@ -274,7 +270,6 @@ block_all_traffic=true
 
 ### Custom Extensions
 - `.a3log` - Encrypted log files
-- `.a3img` - Encrypted screenshot files  
 - `.a3bak` - Encrypted backup files
 - `.a3int` - Encrypted integrity check files
 
@@ -298,13 +293,6 @@ block_all_traffic=true
 - Ethernet interface control
 - Traffic blocking with iptables
 - NetworkManager integration
-
-### Screenshot System
-- Encrypted storage
-- Configurable intervals
-- Thumbnail generation
-- Automatic cleanup
-- Integrity verification
 
 ## Troubleshooting
 
@@ -439,7 +427,6 @@ For support and bug reports:
 
 For optimal performance on exam systems:
 - Adjust monitoring intervals based on exam duration
-- Limit screenshot frequency for longer exams
 - Configure resource limits appropriately
 - Use SSD storage for better I/O performance
 - Disable unnecessary system services during exams
