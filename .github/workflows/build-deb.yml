@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload artifacts
         if: matrix.build-type == 'Release'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: a3guard-deb-package
           path: build/*.deb

@@ -61,7 +61,7 @@ jobs:
           fi
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: a3guard-build-${{ matrix.build-type }}-ubuntu-20.04
           path: build/A3Guard
