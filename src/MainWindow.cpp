@@ -2047,13 +2047,10 @@ void MainWindow::onUpdateCheckFailed(QString errorMessage)
         "<b style='color: #dc3545; font-size: 12pt;'>✗ Unable to check for updates</b>"
     );
     msgBox.setInformativeText(
-        "<b>Error:</b> " + errorMessage + "<br><br>Please check your internet connection and try again."
+        "<b>Error:</b> " + errorMessage + "<br><br>Please check your internet connection and try again later."
     );
-    msgBox.setStandardButtons(QMessageBox::Retry | QMessageBox::Cancel);
-    
-    if (msgBox.exec() == QMessageBox::Retry) {
-        checkForUpdates();
-    }
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.exec();
 }
 
 void MainWindow::onDownloadStarted(QString fileName)

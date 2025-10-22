@@ -80,6 +80,14 @@ void UpdateChecker::checkForUpdates()
     connect(m_currentReply, QOverload<QNetworkReply::NetworkError>::of(&QNetworkReply::errorOccurred),
             this, &UpdateChecker::onNetworkError);
     
+    connect(timeoutTimer, &QTimer::timeout, this, [this]() {
+        if (m_currentReply) {
+            m_currentReply->abort();
+            m_currentReply = nullptr;
+        }
+        emit checkFailed("Network request timed out. Please check your connection.");
+    });
+    
     timeoutTimer->start(NETWORK_TIMEOUT_MS);
 }
 
