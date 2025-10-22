@@ -2,7 +2,7 @@
 Type=Application
 Name=A3Guard
 Comment=Advanced Assessment and Monitoring Application
-Icon=A3Guard
+Icon=/usr/share/pixmaps/A3Guard.png
 Exec=/usr/local/bin/a3guard
 Terminal=false
 Categories=Education;Utility;
