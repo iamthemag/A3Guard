@@ -107,6 +107,9 @@ set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
 # Include directories for update checker
 target_include_directories(a3guard-update-checker PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${Qt5Core_INCLUDE_DIRS}
+    ${Qt5Gui_INCLUDE_DIRS}
+    ${Qt5Network_INCLUDE_DIRS}
 )
 
 # Link update checker helper
