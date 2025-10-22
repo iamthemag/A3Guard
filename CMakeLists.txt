@@ -82,7 +82,7 @@ add_executable(${PROJECT_NAME}
 )
 
 # Create update checker helper executable
-qt5_wrap_cpp(UPDATE_CHECKER_MOC src/a3guard-update-checker.cpp)
+qt5_wrap_cpp(UPDATE_CHECKER_MOC include/UpdateCheckerDialog.h)
 add_executable(a3guard-update-checker
     src/a3guard-update-checker.cpp
     ${UPDATE_CHECKER_MOC}
