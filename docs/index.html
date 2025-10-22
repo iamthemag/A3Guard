@@ -298,6 +298,16 @@
             }
         }
         
+        #desktopMenu {
+            display: flex;
+        }
+        
+        @media (max-width: 768px) {
+            #desktopMenu {
+                display: none;
+            }
+        }
+        
         @media (max-width: 480px) {
             header {
                 padding: 30px 10px;
@@ -345,7 +355,7 @@
 <body>
     <header>
         <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px;">
-            <img src="../A3Guard.png" alt="A3Guard Logo" style="max-width: 120px; height: auto;">
+            <img src="A3Guard.png" alt="A3Guard Logo" style="max-width: 120px; height: auto;">
             <div>
                 <h1 style="margin: 0;">A3Guard</h1>
                 <p style="margin: 10px 0 0 0;">Advanced Assessment Application & Monitoring Solution</p>
@@ -356,10 +366,21 @@
     <nav>
         <div class="container">
             <div style="font-weight: bold; color: #007bff; display: flex; align-items: center; gap: 10px;">
-                <img src="../A3Guard.png" alt="A3Guard" style="max-width: 30px; height: 30px;">
+                <img src="A3Guard.png" alt="A3Guard" style="max-width: 30px; height: 30px;">
                 <span>A3Guard</span>
             </div>
-            <div class="cta-buttons">
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-menu" id="navMenu">
+                <a href="#features" class="btn btn-secondary">Features</a>
+                <a href="#installation" class="btn btn-secondary">Install</a>
+                <a href="#docs" class="btn btn-secondary">Documentation</a>
+                <a href="https://github.com/iamthemag/A3Guard" class="btn btn-primary">View on GitHub</a>
+            </div>
+            <div class="cta-buttons" id="desktopMenu">
                 <a href="#features" class="btn btn-secondary">Features</a>
                 <a href="#installation" class="btn btn-secondary">Install</a>
                 <a href="#docs" class="btn btn-secondary">Documentation</a>
@@ -367,6 +388,24 @@
             </div>
         </div>
     </nav>
+    
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+        
+        // Close menu when a link is clicked
+        document.querySelectorAll('#navMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
     
     <section class="hero">
         <div class="container">
