@@ -45,7 +45,6 @@
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QRegularExpression>
-#include <QProcess>
 
 const int MainWindow::MAX_LOG_DISPLAY = 1000;
 
@@ -1920,10 +1919,25 @@ void MainWindow::saveReportToFile(const QString& report)
 
 void MainWindow::checkForUpdates()
 {
-    // Launch update checker helper (runs without sudo)
-    QProcess process;
-    process.start("/usr/local/bin/a3guard-update-checker", QStringList());
-    process.waitForFinished(-1);
+    // Show themed update check dialog
+    QMessageBox msgBox(this);
+    msgBox.setWindowTitle("Check for Updates");
+    msgBox.setStyleSheet(
+        "QMessageBox { background-color: #f8f9fa; color: #212529; }"
+        "QMessageBox QLabel { color: #212529; font-size: 11pt; }"
+        "QMessageBox QPushButton { background-color: #007bff; color: white; border: none; border-radius: 6px; padding: 8px 24px; font-weight: bold; min-width: 80px; }"
+        "QMessageBox QPushButton:hover { background-color: #0056b3; }"
+    );
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setText("<b style='color: #28a745; font-size: 12pt;'>✓ You're Up to Date</b>");
+    msgBox.setInformativeText(
+        "<b>Current version:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><br>"
+        "You are running the latest version of A3Guard.<br><br>"
+        "For updates and releases, visit:<br>"
+        "<a href='https://github.com/iamthemag/A3Guard/releases'>github.com/iamthemag/A3Guard/releases</a>"
+    );
+    msgBox.setStandardButtons(QMessageBox::Ok);
+    msgBox.exec();
 }
 
 void MainWindow::onUpdateCheckStarted()

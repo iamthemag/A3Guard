@@ -95,29 +95,6 @@ target_link_libraries(${PROJECT_NAME}
     pthread
 )
 
-# Create update checker helper executable
-add_executable(a3guard-update-checker
-    src/a3guard-update-checker.cpp
-    include/UpdateCheckerDialog.h
-)
-
-# Enable AUTOMOC for update checker
-set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
-
-# Include directories for update checker
-target_include_directories(a3guard-update-checker PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Network_INCLUDE_DIRS}
-)
-
-# Link update checker helper
-target_link_libraries(a3guard-update-checker
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Network
-)
 
 # Compiler flags
 target_compile_options(${PROJECT_NAME} PRIVATE 
@@ -133,13 +110,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # Installation
-install(TARGETS ${PROJECT_NAME} a3guard-update-checker
+install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION /opt/a3guard/bin
-)
-
-# Install update checker helper to user bin for non-root execution
-install(TARGETS a3guard-update-checker
-    RUNTIME DESTINATION /usr/local/bin
 )
 
 install(FILES config/a3guard.conf
