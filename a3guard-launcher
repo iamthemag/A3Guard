@@ -1,3 +1,6 @@
 #!/bin/bash
 # A3Guard launcher with privilege elevation
-exec pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY /opt/a3guard/bin/A3Guard "$@"
+if [ -z "$XDG_RUNTIME_DIR" ]; then
+    XDG_RUNTIME_DIR=/run/user/$(id -u)
+fi
+exec pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR /opt/a3guard/bin/A3Guard "$@"
