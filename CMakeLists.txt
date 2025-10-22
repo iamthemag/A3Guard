@@ -82,11 +82,11 @@ add_executable(${PROJECT_NAME}
 )
 
 # Create update checker helper executable
+qt5_wrap_cpp(UPDATE_CHECKER_MOC src/a3guard-update-checker.cpp)
 add_executable(a3guard-update-checker
     src/a3guard-update-checker.cpp
+    ${UPDATE_CHECKER_MOC}
 )
-
-set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME}

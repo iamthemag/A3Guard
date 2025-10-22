@@ -1922,7 +1922,7 @@ void MainWindow::checkForUpdates()
 {
     // Launch update checker helper (runs without sudo)
     QProcess process;
-    process.start("/usr/local/bin/a3guard-update-checker");
+    process.start("/usr/local/bin/a3guard-update-checker", QStringList());
     process.waitForFinished(-1);
 }
 
