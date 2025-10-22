@@ -54,7 +54,7 @@ private:
     QString m_downloadPath;
     QDateTime m_lastCheckTime;
     const int RATE_LIMIT_SECONDS = 3600;
-    const int NETWORK_TIMEOUT_MS = 30000;
+    const int NETWORK_TIMEOUT_MS = 60000;
 };
 
 #endif // UPDATECHECKER_H

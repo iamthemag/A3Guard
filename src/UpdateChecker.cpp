@@ -73,6 +73,9 @@ void UpdateChecker::checkForUpdates()
     
     m_currentReply = m_networkManager->get(request);
     
+    connect(m_currentReply, &QNetworkReply::finished,
+            this, &UpdateChecker::onGitHubResponseReceived);
+    
     connect(m_currentReply, static_cast<void(QNetworkReply::*)(QNetworkReply::NetworkError)>(&QNetworkReply::error),
             this, &UpdateChecker::onNetworkError);
     
@@ -82,14 +85,11 @@ void UpdateChecker::checkForUpdates()
 void UpdateChecker::onGitHubResponseReceived(QNetworkReply *reply)
 {
     if (!reply) {
-        return;
+        reply = m_currentReply;
     }
     
-    // Stop timeout timer if exists
-    QTimer *timer = findChild<QTimer *>();
-    if (timer) {
-        timer->stop();
-        timer->deleteLater();
+    if (!reply) {
+        return;
     }
     
     if (reply->error() != QNetworkReply::NoError) {
