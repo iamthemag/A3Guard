@@ -1929,11 +1929,10 @@ void MainWindow::checkForUpdates()
         "QMessageBox QPushButton:hover { background-color: #0056b3; }"
     );
     msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("<b style='color: #28a745; font-size: 12pt;'>✓ You're Up to Date</b>");
+    msgBox.setText("<b style='color: #2c5aa0; font-size: 12pt;'>A3Guard - Version Check</b>");
     msgBox.setInformativeText(
-        "<b>Current version:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><br>"
-        "You are running the latest version of A3Guard.<br><br>"
-        "For updates and releases, visit:<br>"
+        "<b>Currently using:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><br>"
+        "To see the latest version and available updates, visit:<br>"
         "<a href='https://github.com/iamthemag/A3Guard/releases'>github.com/iamthemag/A3Guard/releases</a>"
     );
     msgBox.setStandardButtons(QMessageBox::Ok);
