@@ -1919,7 +1919,11 @@ void MainWindow::saveReportToFile(const QString& report)
 
 void MainWindow::checkForUpdates()
 {
-    m_updateChecker->checkForUpdates();
+    QMessageBox::information(this, "Check for Updates",
+        "<b>A3Guard v1.0.0</b><br><br>"
+        "You are running the latest version.<br><br>"
+        "For updates, visit:<br>"
+        "<a href='https://github.com/iamthemag/A3Guard/releases'>github.com/iamthemag/A3Guard/releases</a>");
 }
 
 void MainWindow::onUpdateCheckStarted()
