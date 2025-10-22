@@ -74,12 +74,19 @@ qt5_wrap_cpp(MOC_SOURCES ${HEADERS})
 # Qt resources
 qt5_add_resources(RESOURCE_SOURCES resources/a3guard.qrc)
 
-# Create executable
+# Create main executable
 add_executable(${PROJECT_NAME} 
     ${SOURCES} 
     ${MOC_SOURCES} 
     ${RESOURCE_SOURCES}
 )
+
+# Create update checker helper executable
+add_executable(a3guard-update-checker
+    src/a3guard-update-checker.cpp
+)
+
+set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME}
@@ -93,6 +100,13 @@ target_link_libraries(${PROJECT_NAME}
     ${X11_LIBRARIES}
     ${XFIXES_LIBRARIES}
     pthread
+)
+
+# Link update checker helper
+target_link_libraries(a3guard-update-checker
+    Qt5::Core
+    Qt5::Gui
+    Qt5::Network
 )
 
 # Compiler flags
@@ -109,8 +123,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 # Installation
-install(TARGETS ${PROJECT_NAME}
+install(TARGETS ${PROJECT_NAME} a3guard-update-checker
     RUNTIME DESTINATION /opt/a3guard/bin
+)
+
+# Install update checker helper to user bin for non-root execution
+install(TARGETS a3guard-update-checker
+    RUNTIME DESTINATION /usr/local/bin
 )
 
 install(FILES config/a3guard.conf
