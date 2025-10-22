@@ -35,6 +35,12 @@
             opacity: 0.9;
         }
         
+        header img {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -56,10 +62,54 @@
             padding: 15px 20px;
         }
         
+        .logo-section {
+            font-weight: bold;
+            color: #007bff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-section img {
+            max-width: 30px;
+            height: 30px;
+        }
+        
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: #007bff;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+        
         nav a {
             color: #007bff;
             text-decoration: none;
-            margin: 0 15px;
             font-weight: 500;
         }
         
@@ -71,6 +121,7 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         
         .btn {
@@ -110,6 +161,17 @@
             text-align: center;
         }
         
+        .hero h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        
         .features {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -123,6 +185,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            text-align: center;
         }
         
         .feature-card:hover {
@@ -228,6 +291,31 @@
             border-radius: 8px;
         }
         
+        /* Mobile Menu - Hidden by default */
+        .mobile-nav-menu {
+            display: none;
+            position: absolute;
+            top: 60px;
+            left: 0;
+            right: 0;
+            background: white;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            z-index: 99;
+        }
+        
+        .mobile-nav-menu.active {
+            display: flex;
+        }
+        
+        .mobile-nav-menu a {
+            padding: 10px 0;
+            display: block;
+        }
+        
+        /* Tablet and below */
         @media (max-width: 768px) {
             header {
                 padding: 40px 15px;
@@ -243,23 +331,19 @@
             
             header img {
                 max-width: 90px;
+                margin-bottom: 15px;
             }
             
             nav .container {
-                flex-direction: column;
-                gap: 15px;
-                padding: 15px 10px;
+                padding: 12px 15px;
             }
             
-            nav a {
-                margin: 5px;
-                font-size: 0.95em;
-                padding: 10px 16px;
+            .hamburger {
+                display: flex;
             }
             
-            .cta-buttons {
-                justify-content: center;
-                gap: 8px;
+            .nav-menu {
+                display: none;
             }
             
             .features {
@@ -272,8 +356,6 @@
             }
             
             .btn {
-                width: 100%;
-                text-align: center;
                 font-size: 0.95em;
                 padding: 10px 16px;
             }
@@ -296,18 +378,25 @@
                 padding: 15px;
                 overflow-x: auto;
             }
-        }
-        
-        #desktopMenu {
-            display: flex;
-        }
-        
-        @media (max-width: 768px) {
-            #desktopMenu {
-                display: none;
+            
+            .requirements {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-buttons {
+                gap: 8px;
+            }
+            
+            .hero h2 {
+                font-size: 1.8em;
+            }
+            
+            .hero p {
+                font-size: 0.95em;
             }
         }
         
+        /* Mobile */
         @media (max-width: 480px) {
             header {
                 padding: 30px 10px;
@@ -333,8 +422,20 @@
                 font-size: 1em;
             }
             
-            .cta-buttons {
-                gap: 6px;
+            nav .container {
+                padding: 10px;
+            }
+            
+            .logo-section {
+                font-size: 0.9em;
+            }
+            
+            .section h2 {
+                font-size: 1.4em;
+            }
+            
+            .feature-icon {
+                font-size: 2em;
             }
             
             .btn {
@@ -342,12 +443,22 @@
                 padding: 8px 12px;
             }
             
-            .feature-icon {
-                font-size: 2em;
+            pre {
+                font-size: 0.75em;
+                padding: 10px;
             }
             
-            .section h2 {
-                font-size: 1.6em;
+            .requirements {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .grid-2 {
+                gap: 20px;
+            }
+            
+            .section {
+                padding: 20px 10px;
             }
         }
     </style>
@@ -355,18 +466,18 @@
 <body>
     <header>
         <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px;">
-            <img src="A3Guard.png" alt="A3Guard Logo" style="max-width: 120px; height: auto;">
+            <img src="A3Guard.png" alt="A3Guard Logo">
             <div>
-                <h1 style="margin: 0;">A3Guard</h1>
-                <p style="margin: 10px 0 0 0;">Advanced Assessment Application & Monitoring Solution</p>
+                <h1>A3Guard</h1>
+                <p>Advanced Assessment Application & Monitoring Solution</p>
             </div>
         </div>
     </header>
     
     <nav>
         <div class="container">
-            <div style="font-weight: bold; color: #007bff; display: flex; align-items: center; gap: 10px;">
-                <img src="A3Guard.png" alt="A3Guard" style="max-width: 30px; height: 30px;">
+            <div class="logo-section">
+                <img src="A3Guard.png" alt="A3Guard">
                 <span>A3Guard</span>
             </div>
             <div class="hamburger" id="hamburger">
@@ -374,56 +485,35 @@
                 <span></span>
                 <span></span>
             </div>
-            <div class="nav-menu" id="navMenu">
-                <a href="#features" class="btn btn-secondary">Features</a>
-                <a href="#installation" class="btn btn-secondary">Install</a>
-                <a href="#docs" class="btn btn-secondary">Documentation</a>
-                <a href="https://github.com/iamthemag/A3Guard" class="btn btn-primary">View on GitHub</a>
+            <div class="nav-menu">
+                <a href="#features">Features</a>
+                <a href="#installation">Install</a>
+                <a href="#docs">Documentation</a>
+                <a href="https://github.com/iamthemag/A3Guard" target="_blank">GitHub</a>
             </div>
-            <div class="cta-buttons" id="desktopMenu">
-                <a href="#features" class="btn btn-secondary">Features</a>
-                <a href="#installation" class="btn btn-secondary">Install</a>
-                <a href="#docs" class="btn btn-secondary">Documentation</a>
-                <a href="https://github.com/iamthemag/A3Guard" class="btn btn-primary">View on GitHub</a>
+            <div class="mobile-nav-menu" id="mobileMenu">
+                <a href="#features">Features</a>
+                <a href="#installation">Install</a>
+                <a href="#docs">Documentation</a>
+                <a href="https://github.com/iamthemag/A3Guard" target="_blank">GitHub</a>
             </div>
         </div>
     </nav>
     
-    <script>
-        const hamburger = document.getElementById('hamburger');
-        const navMenu = document.getElementById('navMenu');
-        
-        hamburger.addEventListener('click', function() {
-            hamburger.classList.toggle('active');
-            navMenu.classList.toggle('active');
-        });
-        
-        // Close menu when a link is clicked
-        document.querySelectorAll('#navMenu a').forEach(link => {
-            link.addEventListener('click', function() {
-                hamburger.classList.remove('active');
-                navMenu.classList.remove('active');
-            });
-        });
-    </script>
-    
     <section class="hero">
         <div class="container">
-            <h2 style="font-size: 2.5em; margin-bottom: 20px;">Comprehensive Exam Monitoring & Assessment</h2>
-            <p style="font-size: 1.1em; color: #666; margin-bottom: 30px;">
-                A3Guard is a powerful C++/Qt5 desktop application designed for advanced assessment scenarios with 
-                robust security features, real-time monitoring, and minimal resource usage.
-            </p>
-            <div class="cta-buttons" style="justify-content: center;">
-                <a href="https://github.com/iamthemag/A3Guard/releases/download/v1.0.0/a3guard-1.0.0-Linux.deb" class="btn btn-primary" download>⬇️ Download DEB Package</a>
+            <h2>Comprehensive Exam Monitoring & Assessment</h2>
+            <p>A3Guard is a powerful C++/Qt5 desktop application designed for advanced assessment scenarios with robust security features, real-time monitoring, and minimal resource usage.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/iamthemag/A3Guard/releases/download/v1.0.0/a3guard-1.0.0-Linux.deb" class="btn btn-primary">⬇️ Download DEB Package</a>
                 <a href="https://github.com/iamthemag/A3Guard/releases" class="btn btn-secondary">All Releases</a>
                 <a href="https://github.com/iamthemag/A3Guard" class="btn btn-secondary">View Source Code</a>
             </div>
         </div>
     </section>
     
-    <section id="features" class="container">
-        <h2 style="font-size: 2em; text-align: center; margin-bottom: 40px; color: #007bff;">Core Features</h2>
+    <section id="features" class="container" style="margin-top: 60px;">
+        <h2 style="text-align: center; margin-bottom: 40px;">Core Features</h2>
         <div class="features">
             <div class="feature-card">
                 <div class="feature-icon">📱</div>
@@ -486,8 +576,7 @@
             </div>
             
             <h3 style="margin-top: 30px; margin-bottom: 15px;">Quick Install</h3>
-            <pre>
-# Install dependencies
+            <pre># Install dependencies
 sudo apt-get update
 sudo apt-get install -y build-essential cmake qtbase5-dev qtbase5-dev-tools \
     libssl-dev libudev-dev libx11-dev libxfixes-dev pkg-config
@@ -502,8 +591,7 @@ cd ..
 sudo ./scripts/install.sh</pre>
 
             <h3 style="margin-top: 30px; margin-bottom: 15px;">Install from Debian Package</h3>
-            <pre>
-# Download from latest release
+            <pre># Download from latest release
 wget https://github.com/iamthemag/A3Guard/releases/download/v1.0.0/a3guard-1.0.0-Linux.deb
 
 # Install
@@ -514,7 +602,7 @@ sudo apt install -f  # Fix dependencies if needed</pre>
     
     <section id="docs" class="section">
         <div class="container">
-            <h2 style="text-align: center; color: #007bff; margin-bottom: 40px;">Documentation</h2>
+            <h2 style="text-align: center; margin-bottom: 40px;">Documentation</h2>
             
             <div class="grid-2">
                 <div>
@@ -545,8 +633,7 @@ sudo apt install -f  # Fix dependencies if needed</pre>
             <h2>Usage</h2>
             
             <h3 style="margin-top: 20px;">Launch A3Guard</h3>
-            <pre>
-# GUI mode (requires root)
+            <pre># GUI mode (requires root)
 sudo a3guard
 
 # Or use desktop launcher (with authentication)
@@ -556,8 +643,7 @@ a3guard
 sudo systemctl start a3guard</pre>
 
             <h3 style="margin-top: 20px;">Key Commands</h3>
-            <pre>
-# Generate new encryption key
+            <pre># Generate new encryption key
 sudo a3guard --generate-key
 
 # Verify file integrity
@@ -570,18 +656,18 @@ a3guard --help</pre>
     
     <section class="section">
         <div class="container">
-            <h2 style="text-align: center; color: #007bff; margin-bottom: 40px;">Project Statistics</h2>
+            <h2 style="text-align: center; margin-bottom: 40px;">Project Statistics</h2>
             
             <div class="features">
-                <div class="feature-card" style="text-align: center;">
+                <div class="feature-card">
                     <div style="font-size: 2.5em; color: #007bff; font-weight: bold;">C++17</div>
                     <p>Modern C++ with Qt5 Framework</p>
                 </div>
-                <div class="feature-card" style="text-align: center;">
+                <div class="feature-card">
                     <div style="font-size: 2.5em; color: #007bff; font-weight: bold;">AES-256</div>
                     <p>Military-Grade Encryption</p>
                 </div>
-                <div class="feature-card" style="text-align: center;">
+                <div class="feature-card">
                     <div style="font-size: 2.5em; color: #007bff; font-weight: bold;">GPLv3</div>
                     <p>Open Source License</p>
                 </div>
@@ -599,5 +685,31 @@ a3guard --help</pre>
             </p>
         </div>
     </footer>
+    
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+        });
+        
+        // Close menu when a link is clicked
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', function() {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            });
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('nav')) {
+                hamburger.classList.remove('active');
+                mobileMenu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
