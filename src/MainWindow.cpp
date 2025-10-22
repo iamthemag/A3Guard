@@ -1115,8 +1115,6 @@ void MainWindow::toggleMonitoring()
         //     m_keyLogger->startLogging();
         // }
         
-        // Note: Screenshots are now triggered manually with Shift+PrtSc
-        // No automatic screenshot timer
         
         // Enable airplane mode
         if (m_networkManager) {
@@ -1687,7 +1685,6 @@ bool MainWindow::isTerminalOrSystemData(const QString& content)
         "Linking CXX",  // Build output
         "Building CXX", // Build output
         "make[",        // Make output
-        "Screenshots: Capturing", // App-generated text
         "Full Content:",  // Report generation text
         "CLIPBOARD COPIED", // Meta-text about clipboard
         "Keystroke",   // Keystroke monitoring output

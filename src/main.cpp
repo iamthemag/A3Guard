@@ -175,9 +175,8 @@ int main(int argc, char *argv[])
                         QFile userConfig(configFile);
                         if (userConfig.open(QIODevice::WriteOnly | QIODevice::Text)) {
                             QTextStream out(&userConfig);
-                            out << "[monitoring]\n";
-                            out << "screenshot_interval=120000\n";
-                            out << "network_check_interval=30000\n";
+            out << "[monitoring]\n";
+            out << "network_check_interval=30000\n";
                             out << "[security]\n";
                             out << "enable_encryption=true\n";
                             userConfig.close();
@@ -235,11 +234,7 @@ int main(int argc, char *argv[])
             QStringList logViolations = security->verifyDirectoryIntegrity(
                 config->getLogDir(), config->getLogExtension());
             
-            // Verify screenshot files
-            QStringList screenshotViolations = security->verifyDirectoryIntegrity(
-                config->getScreenshotDir(), config->getScreenshotExtension());
-            
-            int totalViolations = logViolations.size() + screenshotViolations.size();
+            int totalViolations = logViolations.size();
             
             if (totalViolations == 0) {
                 qDebug() << "File integrity verification passed.";
@@ -247,7 +242,7 @@ int main(int argc, char *argv[])
                 return 0;
             } else {
                 qDebug() << "File integrity violations found:" << totalViolations;
-                for (const QString& violation : logViolations + screenshotViolations) {
+                for (const QString& violation : logViolations) {
                     qDebug() << " -" << violation;
                 }
                 LOG_ERROR("File integrity violations found:" << totalViolations);

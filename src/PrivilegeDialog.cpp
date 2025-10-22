@@ -73,8 +73,7 @@ void PrivilegeDialog::setupUI()
         "• Network control (airplane mode)\n"
         "• USB device monitoring\n"
         "• System-wide application tracking\n"
-        "• File system monitoring\n"
-        "• Secure screenshot capture\n\n"
+        "• File system monitoring\n\n"
         "Please grant administrator privileges to continue or exit the application.");
     m_messageLabel->setWordWrap(true);
     m_messageLabel->setStyleSheet("margin: 10px 0px;");
