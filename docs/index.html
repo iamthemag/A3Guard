@@ -229,47 +229,136 @@
         }
         
         @media (max-width: 768px) {
+            header {
+                padding: 40px 15px;
+            }
+            
             header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
             
             header p {
-                font-size: 1em;
+                font-size: 0.95em;
+            }
+            
+            header img {
+                max-width: 90px;
             }
             
             nav .container {
                 flex-direction: column;
-                gap: 10px;
+                gap: 15px;
+                padding: 15px 10px;
             }
             
             nav a {
                 margin: 5px;
+                font-size: 0.95em;
+                padding: 10px 16px;
             }
             
             .cta-buttons {
                 justify-content: center;
+                gap: 8px;
             }
             
             .features {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .feature-card {
+                padding: 20px;
             }
             
             .btn {
                 width: 100%;
                 text-align: center;
+                font-size: 0.95em;
+                padding: 10px 16px;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .section {
+                padding: 30px 15px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            pre {
+                font-size: 0.85em;
+                padding: 15px;
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            header {
+                padding: 30px 10px;
+            }
+            
+            header h1 {
+                font-size: 1.4em;
+            }
+            
+            header p {
+                font-size: 0.9em;
+            }
+            
+            header img {
+                max-width: 70px;
+            }
+            
+            .hero h2 {
+                font-size: 1.6em;
+            }
+            
+            .hero p {
+                font-size: 1em;
+            }
+            
+            .cta-buttons {
+                gap: 6px;
+            }
+            
+            .btn {
+                font-size: 0.9em;
+                padding: 8px 12px;
+            }
+            
+            .feature-icon {
+                font-size: 2em;
+            }
+            
+            .section h2 {
+                font-size: 1.6em;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>🛡️ A3Guard</h1>
-        <p>Advanced Assessment Application & Monitoring Solution</p>
+        <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 20px;">
+            <img src="../A3Guard.png" alt="A3Guard Logo" style="max-width: 120px; height: auto;">
+            <div>
+                <h1 style="margin: 0;">A3Guard</h1>
+                <p style="margin: 10px 0 0 0;">Advanced Assessment Application & Monitoring Solution</p>
+            </div>
+        </div>
     </header>
     
     <nav>
         <div class="container">
-            <div style="font-weight: bold; color: #007bff;">A3Guard</div>
+            <div style="font-weight: bold; color: #007bff; display: flex; align-items: center; gap: 10px;">
+                <img src="../A3Guard.png" alt="A3Guard" style="max-width: 30px; height: 30px;">
+                <span>A3Guard</span>
+            </div>
             <div class="cta-buttons">
                 <a href="#features" class="btn btn-secondary">Features</a>
                 <a href="#installation" class="btn btn-secondary">Install</a>
