@@ -146,6 +146,6 @@ set(CPACK_GENERATOR "DEB")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libqt5gui5, libqt5core5a, libqt5widgets5, libqt5network5, libssl3, libudev1, libx11-6, libxfixes3")
 set(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_PACKAGE_SECTION "education")
-set(CPACK_PACKAGE_HOMEPAGE "https://iamthemag.github.io/A3Guard/")
+set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://iamthemag.github.io/A3Guard/")
 
 include(CPack)
