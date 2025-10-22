@@ -117,6 +117,17 @@ install(FILES config/a3guard.conf
     DESTINATION /etc/a3guard
 )
 
+# Install launcher script
+install(PROGRAMS a3guard-launcher
+    DESTINATION /usr/local/bin
+    RENAME a3guard
+)
+
+# Install desktop entry
+install(FILES A3Guard.desktop
+    DESTINATION /usr/share/applications
+)
+
 # Install application icon
 install(FILES A3Guard.png
     DESTINATION /usr/share/pixmaps

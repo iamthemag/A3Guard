@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=A3Guard
+Comment=Advanced Assessment and Monitoring Application
+Icon=A3Guard
+Exec=pkexec /opt/a3guard/bin/A3Guard
+Terminal=false
+Categories=Education;Utility;

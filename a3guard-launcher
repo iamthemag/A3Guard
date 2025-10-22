@@ -1,0 +1,3 @@
+#!/bin/bash
+# A3Guard launcher with privilege elevation
+exec pkexec /opt/a3guard/bin/A3Guard "$@"
