@@ -82,27 +82,25 @@ add_executable(${PROJECT_NAME}
 )
 
 # Create update checker helper executable
-qt5_wrap_cpp(UPDATE_CHECKER_MOC include/UpdateCheckerDialog.h)
 add_executable(a3guard-update-checker
     src/a3guard-update-checker.cpp
     include/UpdateCheckerDialog.h
-    ${UPDATE_CHECKER_MOC}
 )
+
+# Enable AUTOMOC for update checker
+set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
 
 # Include directories for update checker
 target_include_directories(a3guard-update-checker PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${Qt5Core_INCLUDE_DIRS}
-    ${Qt5Gui_INCLUDE_DIRS}
-    ${Qt5Network_INCLUDE_DIRS}
 )
 
-# Link main executable
-target_link_libraries(${PROJECT_NAME}
+# Link update checker helper
+target_link_libraries(a3guard-update-checker
     Qt5::Core
-    Qt5::Widgets
     Qt5::Gui
     Qt5::Network
+)
     OpenSSL::SSL
     OpenSSL::Crypto
     ${UDEV_LIBRARIES}
