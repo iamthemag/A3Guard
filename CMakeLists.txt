@@ -81,6 +81,20 @@ add_executable(${PROJECT_NAME}
     ${RESOURCE_SOURCES}
 )
 
+# Link main executable
+target_link_libraries(${PROJECT_NAME}
+    Qt5::Core
+    Qt5::Widgets
+    Qt5::Gui
+    Qt5::Network
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    ${UDEV_LIBRARIES}
+    ${X11_LIBRARIES}
+    ${XFIXES_LIBRARIES}
+    pthread
+)
+
 # Create update checker helper executable
 add_executable(a3guard-update-checker
     src/a3guard-update-checker.cpp
@@ -93,20 +107,6 @@ set_target_properties(a3guard-update-checker PROPERTIES AUTOMOC ON)
 # Include directories for update checker
 target_include_directories(a3guard-update-checker PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
-
-# Link update checker helper
-target_link_libraries(a3guard-update-checker
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Network
-)
-    OpenSSL::SSL
-    OpenSSL::Crypto
-    ${UDEV_LIBRARIES}
-    ${X11_LIBRARIES}
-    ${XFIXES_LIBRARIES}
-    pthread
 )
 
 # Link update checker helper
