@@ -13,7 +13,7 @@ env:
 jobs:
   build:
     name: Build A3Guard
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     strategy:
       matrix:
@@ -69,7 +69,7 @@ jobs:
 
   code-quality:
     name: Code Quality Checks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout code
@@ -88,7 +88,7 @@ jobs:
 
   security:
     name: Security Checks
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout code
@@ -101,7 +101,7 @@ jobs:
 
   documentation:
     name: Documentation Check
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout code
@@ -116,7 +116,7 @@ jobs:
 
   summary:
     name: Build Summary
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [build, code-quality, security, documentation]
     if: always()
     
