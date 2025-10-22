@@ -80,11 +80,11 @@ void UpdateCheckerDialog::onFinished() {
     if (updateAvailable) {
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setText("<b style='color: #28a745; font-size: 12pt;'>✓ Update Available!</b>");
-        msgBox.setInformativeText("<b>Current:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><b>Latest:</b> <span style='color: #28a745;'><b>" + latestVersion + "</b></span><br><br><a href='https://github.com/iamthemag/A3Guard/releases'>Download from GitHub</a>");
+        msgBox.setInformativeText("<b>Currently using:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><b>Latest:</b> <span style='color: #28a745;'><b>" + latestVersion + "</b></span><br><br><a href='https://github.com/iamthemag/A3Guard/releases'>Visit releases to download</a>");
     } else {
         msgBox.setIcon(QMessageBox::Information);
         msgBox.setText("<b style='color: #28a745; font-size: 12pt;'>✓ You're Up to Date</b>");
-        msgBox.setInformativeText("<b>Current:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><b>Latest:</b> <span style='color: #28a745;'><b>" + latestVersion + "</b></span>");
+        msgBox.setInformativeText("<b>Currently using:</b> <span style='color: #007bff;'><b>1.0.0</b></span><br><br>For more information, <a href='https://github.com/iamthemag/A3Guard/releases'>visit releases</a>");
     }
     msgBox.setStandardButtons(QMessageBox::Ok);
     msgBox.exec();
